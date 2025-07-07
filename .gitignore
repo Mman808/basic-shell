@@ -1,0 +1,11 @@
+# macOS system file
+.DS_Store
+
+# C compiler output
+*.out
+*.o
+shell 
+
+# text editor files
+*~
+*.swp
