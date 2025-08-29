@@ -17,7 +17,6 @@ int main(){
         if (strcmp(buffer, "exit") == 0){
             break;
         }
-        //printf("You said: %s\n", buffer);
 
         char *args[64];
         char *token = strtok(buffer, " ");
@@ -29,24 +28,29 @@ int main(){
             token = strtok(NULL, " ");
         }
         args[argc] = NULL;
-        /*printf("Parsed %d arguments:\n", argc);
-        for (int i = 0; i < argc; i++){
-            printf(" args[%d] = '%s'\n", i, args[i]);
-        }*/
+        //need to first check if command is CD
+        if (strcmp(args[0], "cd") == 0){
+            if (argc == 2){
+                if (chdir(args[1]) == 0){ //does directory exist?
+                    printf("Changed to: %s\n", args[1]);
+                } else {
+                    //failed, doesn't exist
+                    printf("no such directory exists");
+                }
+            }
+            continue; //skip fork/exec for cd commands
+        }
 
         pid_t pid = fork();
         if (pid == 0){
             //in child process
-            //printf("Child: About to run command\n");
             execvp(args[0], args);
 
             printf("Command failed\n");
             exit(1);
         } else if (pid > 0){
             //in parent process
-            //printf("Parent: Waiting for child to finish\n");
             wait(NULL);
-            //printf("Parent: Child finished\n");
         } else {
             //fork failed
             printf("Fork failed!\n");
